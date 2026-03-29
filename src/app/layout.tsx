@@ -59,6 +59,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: BASE_URL,
   },
+  verification: {
+    google: "vU-gWwkDRxx1vDE7OJlPI5bqgsIWsIHB606fDq6pqKA",
+  },
 };
 
 const jsonLd = {
