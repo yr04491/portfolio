@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
+import { PlayModeProvider } from "@/context/PlayModeContext";
+import PlayModeAnnouncement from "@/components/PlayModeAnnouncement";
+import PlayModeControls from "@/components/PlayModeControls";
 
 const geist = Geist({
   variable: "--font-geist-sans",
@@ -93,7 +96,11 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        {children}
+        <PlayModeProvider>
+          <PlayModeAnnouncement />
+          <PlayModeControls />
+          {children}
+        </PlayModeProvider>
       </body>
     </html>
   );

@@ -1,21 +1,26 @@
+"use client";
+
 import { GITHUB_USERNAME } from "@/config/repos";
+import { translations } from "@/config/i18n";
+import { usePlayMode } from "@/context/PlayModeContext";
 
 export default function Hero() {
+  const { isEnglish } = usePlayMode();
+  const t = isEnglish ? translations.en.hero : translations.ja.hero;
+
   return (
     <section className="min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24">
       <div className="max-w-3xl">
         <p className="text-sm tracking-widest text-neutral-400 uppercase mb-4">
-          Portfolio
+          {t.label}
         </p>
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100 mb-6">
           Rintaro
           <br />
           Yoshida
         </h1>
-        <p className="text-lg md:text-xl text-neutral-500 dark:text-neutral-400 max-w-xl leading-relaxed">
-          福井大学で学ぶエンジニア
-          <br />
-          Web・モバイルアプリを中心に開発しています。
+        <p className="text-lg md:text-xl text-neutral-500 dark:text-neutral-400 max-w-xl leading-relaxed whitespace-pre-line">
+          {t.description}
         </p>
         <div className="mt-10 flex items-center gap-6">
           <a
@@ -39,7 +44,7 @@ export default function Hero() {
             GitHub
           </a>
           <span className="text-neutral-300 dark:text-neutral-600">→</span>
-          <span className="text-sm text-neutral-400">Scroll to explore</span>
+          <span className="text-sm text-neutral-400">{t.scroll}</span>
         </div>
       </div>
     </section>
