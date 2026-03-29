@@ -19,7 +19,8 @@ export const metadata: Metadata = {
     "福井大学在学中のエンジニア、Rintaro Yoshida のポートフォリオです。Web・モバイルアプリ開発を中心に活動しています。",
   keywords: [
     "Rintaro Yoshida",
-    "吉田倫太郎",
+    "吉田琳汰朗",
+    "よしだりんたろう",
     "ポートフォリオ",
     "エンジニア",
     "福井大学",
@@ -68,6 +69,7 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Rintaro Yoshida",
+  alternateName: ["吉田琳汰朗", "よしだりんたろう"],
   url: BASE_URL,
   sameAs: ["https://github.com/yr04491"],
   jobTitle: "Student Engineer",
