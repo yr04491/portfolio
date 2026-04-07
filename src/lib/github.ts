@@ -1,12 +1,14 @@
-import { GITHUB_USERNAME, PINNED_REPOS } from "@/config/repos";
+import { GITHUB_USERNAME, HIDDEN_REPOS } from "@/config/repos";
 
 export type Repo = {
   name: string;
   description: string | null;
   html_url: string;
+  homepage: string | null;
   language: string | null;
   stargazers_count: number;
   updated_at: string;
+  fork: boolean;
 };
 
 export type LanguageStat = {
@@ -15,22 +17,40 @@ export type LanguageStat = {
   percentage: number;
 };
 
-// 表示するリポジトリ一覧を取得
+const GITHUB_HEADERS = { Accept: "application/vnd.github+json" };
+const FETCH_OPTS = { next: { revalidate: 3600 }, headers: GITHUB_HEADERS };
+
+// 表示するリポジトリ一覧を取得（個人 + 所属組織）
 export async function getPinnedRepos(): Promise<Repo[]> {
-  const res = await fetch(
+  // 個人リポジトリ
+  const personalRes = await fetch(
     `https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`,
-    {
-      next: { revalidate: 3600 }, // 1時間ごとに再取得
-      headers: {
-        Accept: "application/vnd.github+json",
-      },
-    }
+    FETCH_OPTS
   );
+  const personalRepos: Repo[] = personalRes.ok ? await personalRes.json() : [];
 
-  if (!res.ok) return [];
+  // 所属組織一覧
+  const orgsRes = await fetch(
+    `https://api.github.com/users/${GITHUB_USERNAME}/orgs`,
+    FETCH_OPTS
+  );
+  const orgs: { login: string }[] = orgsRes.ok ? await orgsRes.json() : [];
 
-  const allRepos: Repo[] = await res.json();
-  return allRepos.filter((repo) => PINNED_REPOS.includes(repo.name));
+  // 各組織のリポジトリを並列取得
+  const orgReposList = await Promise.all(
+    orgs.map(async (org) => {
+      const res = await fetch(
+        `https://api.github.com/orgs/${org.login}/repos?per_page=100&sort=updated`,
+        FETCH_OPTS
+      );
+      return res.ok ? (res.json() as Promise<Repo[]>) : [];
+    })
+  );
+  const orgRepos = orgReposList.flat();
+
+  return [...personalRepos, ...orgRepos].filter(
+    (repo) => !repo.fork && !HIDDEN_REPOS.includes(repo.name)
+  );
 }
 
 // 全リポジトリから使用言語を集計して取得

@@ -1,10 +1,9 @@
-// 表示するGitHubリポジトリ名をここに追加する
-// 新しいプロジェクトを追加したらこのリストに名前を追記してgit pushするだけ
-export const PINNED_REPOS: string[] = [
-  "my-recipe-app",
-  "Surfing",
-  "Com_Page",
-  "web_Fukui",
+// 非表示にするGitHubリポジトリ名をここに追加する
+export const HIDDEN_REPOS: string[] = [
+  "text_read",
+  "web_F_2",
+  "yr04491.github.io",
+  "portfolio",
 ];
 
 export const GITHUB_USERNAME = "yr04491";
