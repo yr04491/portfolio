@@ -6,8 +6,8 @@ import { PROJECT_DETAILS } from "@/config/projects";
 import { usePlayMode } from "@/context/PlayModeContext";
 
 const LABELS = {
-  ja: { repository: "リポジトリ", title: "タイトル", description: "説明", background: "制作背景", techPoints: "技術的なポイント", usage: "使い方", noDescription: "説明なし", updatedAt: "最終更新日" },
-  en: { repository: "Repository", title: "Title", description: "Description", background: "Background", techPoints: "Tech Points", usage: "Usage", noDescription: "No description", updatedAt: "Last Updated" },
+  ja: { repository: "リポジトリ", title: "タイトル", description: "説明", background: "制作背景", techPoints: "技術的なポイント", usage: "使い方", language: "使用言語", noDescription: "説明なし", updatedAt: "最終更新日" },
+  en: { repository: "Repository", title: "Title", description: "Description", background: "Background", techPoints: "Tech Points", usage: "Usage", language: "Language", noDescription: "No description", updatedAt: "Last Updated" },
 } as const;
 
 const LANGUAGE_COLORS: Record<string, string> = {
@@ -153,14 +153,17 @@ function DetailContent({ repo, labels }: { repo: Repo; labels: typeof LABELS[key
         </div>
       )}
 
-      {/* 言語 */}
+      {/* 使用言語 */}
       {repo.language && (
-        <div className="flex items-center gap-1.5 mb-6">
-          <span
-            className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-            style={{ backgroundColor: LANGUAGE_COLORS[repo.language] ?? "#8b8b8b" }}
-          />
-          <span className="text-xs text-neutral-400">{repo.language}</span>
+        <div className="mb-6">
+          <p className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-2">{labels.language}</p>
+          <div className="flex items-center gap-1.5">
+            <span
+              className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+              style={{ backgroundColor: LANGUAGE_COLORS[repo.language] ?? "#8b8b8b" }}
+            />
+            <span className="text-xs text-neutral-400">{repo.language}</span>
+          </div>
         </div>
       )}
 
