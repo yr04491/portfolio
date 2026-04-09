@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Repo } from "@/lib/github";
+import { PROJECT_DETAILS } from "@/config/projects";
 
 const LANGUAGE_COLORS: Record<string, string> = {
   JavaScript: "#f7df1e",
@@ -57,7 +58,7 @@ function CardContent({ repo }: { repo: Repo }) {
       <h3 className="text-base font-semibold text-neutral-900 dark:text-neutral-100 truncate mb-2">
         {repo.name}
       </h3>
-      <p className="text-sm text-neutral-500 dark:text-neutral-400 line-clamp-3 flex-1 mb-4">
+      <p className="text-sm text-neutral-500 dark:text-neutral-400 flex-1 mb-4">
         {repo.description ?? "説明なし"}
       </p>
       {repo.language && (
@@ -74,16 +75,71 @@ function CardContent({ repo }: { repo: Repo }) {
   );
 }
 
-/** 詳細モーダルの表示内容 — 現在は一覧と同じ、将来ここを拡張 */
+/** 詳細モーダルの表示内容 — 将来ここを拡張 */
 function DetailContent({ repo }: { repo: Repo }) {
+  const detail = PROJECT_DETAILS[repo.name] ?? {};
+
   return (
     <>
-      <h3 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 mb-2 pr-8">
-        {repo.name}
-      </h3>
-      <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-6 leading-relaxed">
-        {repo.description ?? "説明なし"}
-      </p>
+      {/* リポジトリ名 + 小ラベル */}
+      <div className="flex items-baseline gap-2 mb-4 pr-8">
+        <h3 className="text-xl font-bold text-neutral-900 dark:text-neutral-100">
+          {repo.name}
+        </h3>
+        <span className="text-xs text-neutral-400">リポジトリ</span>
+      </div>
+
+      {/* GitHub description */}
+      {repo.description && (
+        <div className="mb-4">
+          <p className="text-xs font-semibold text-neutral-400 mb-1">タイトル</p>
+          <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            {repo.description}
+          </p>
+        </div>
+      )}
+
+      {/* 詳細説明 */}
+      {detail.description && (
+        <div className="mb-4">
+          <p className="text-xs font-semibold text-neutral-400 mb-1">説明</p>
+          <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            {detail.description}
+          </p>
+        </div>
+      )}
+
+      {/* 制作背景 */}
+      {detail.background && (
+        <div className="mb-4">
+          <p className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-1">制作背景</p>
+          <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">{detail.background}</p>
+        </div>
+      )}
+
+      {/* 技術的なポイント */}
+      {detail.techPoints && detail.techPoints.length > 0 && (
+        <div className="mb-4">
+          <p className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-2">技術的なポイント</p>
+          <ul className="flex flex-wrap gap-2">
+            {detail.techPoints.map((point) => (
+              <li key={point} className="text-xs bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 px-2 py-1 rounded-md">
+                {point}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* 簡単な使い方 */}
+      {detail.usage && (
+        <div className="mb-4">
+          <p className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-1">使い方</p>
+          <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">{detail.usage}</p>
+        </div>
+      )}
+
+      {/* 言語 */}
       {repo.language && (
         <div className="flex items-center gap-1.5 mb-6">
           <span
@@ -93,6 +149,7 @@ function DetailContent({ repo }: { repo: Repo }) {
           <span className="text-xs text-neutral-400">{repo.language}</span>
         </div>
       )}
+
       <RepoLinks repo={repo} size="base" />
     </>
   );
