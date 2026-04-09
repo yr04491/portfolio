@@ -99,7 +99,7 @@ function DetailContent({ repo, labels }: { repo: Repo; labels: typeof LABELS[key
       <div className="mb-4">
         <p className="text-xs font-semibold text-neutral-400 mb-1">{labels.updatedAt}</p>
         <p className="text-sm text-neutral-600 dark:text-neutral-400">
-          {new Date(repo.updated_at).toLocaleDateString(labels.repository === "Repository" ? "en-US" : "ja-JP", { year: "numeric", month: "short", day: "numeric" })}
+          {new Date(repo.pushed_at).toLocaleDateString(labels.repository === "Repository" ? "en-US" : "ja-JP", { year: "numeric", month: "short", day: "numeric" })}
         </p>
       </div>
 
