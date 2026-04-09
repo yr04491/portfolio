@@ -6,8 +6,8 @@ import { PROJECT_DETAILS } from "@/config/projects";
 import { usePlayMode } from "@/context/PlayModeContext";
 
 const LABELS = {
-  ja: { repository: "リポジトリ", title: "タイトル", description: "説明", background: "制作背景", techPoints: "技術的なポイント", usage: "使い方", noDescription: "説明なし" },
-  en: { repository: "Repository", title: "Title", description: "Description", background: "Background", techPoints: "Tech Points", usage: "Usage", noDescription: "No description" },
+  ja: { repository: "リポジトリ", title: "タイトル", description: "説明", background: "制作背景", techPoints: "技術的なポイント", usage: "使い方", noDescription: "説明なし", updatedAt: "最終更新日" },
+  en: { repository: "Repository", title: "Title", description: "Description", background: "Background", techPoints: "Tech Points", usage: "Usage", noDescription: "No description", updatedAt: "Last Updated" },
 } as const;
 
 const LANGUAGE_COLORS: Record<string, string> = {
@@ -93,6 +93,14 @@ function DetailContent({ repo, labels }: { repo: Repo; labels: typeof LABELS[key
           {repo.name}
         </h3>
         <span className="text-xs text-neutral-400">{labels.repository}</span>
+      </div>
+
+      {/* 最終更新日 */}
+      <div className="mb-4">
+        <p className="text-xs font-semibold text-neutral-400 mb-1">{labels.updatedAt}</p>
+        <p className="text-sm text-neutral-600 dark:text-neutral-400">
+          {new Date(repo.updated_at).toLocaleDateString(labels.repository === "Repository" ? "en-US" : "ja-JP", { year: "numeric", month: "short", day: "numeric" })}
+        </p>
       </div>
 
       {/* GitHub description */}
