@@ -3,6 +3,12 @@
 import { useState } from "react";
 import type { Repo } from "@/lib/github";
 import { PROJECT_DETAILS } from "@/config/projects";
+import { usePlayMode } from "@/context/PlayModeContext";
+
+const LABELS = {
+  ja: { repository: "リポジトリ", title: "タイトル", description: "説明", background: "制作背景", techPoints: "技術的なポイント", usage: "使い方", noDescription: "説明なし" },
+  en: { repository: "Repository", title: "Title", description: "Description", background: "Background", techPoints: "Tech Points", usage: "Usage", noDescription: "No description" },
+} as const;
 
 const LANGUAGE_COLORS: Record<string, string> = {
   JavaScript: "#f7df1e",
@@ -52,14 +58,14 @@ function RepoLinks({ repo, size = "sm" }: { repo: Repo; size?: "sm" | "base" }) 
 }
 
 /** 一覧カードの表示内容 — 将来的に詳細と差別化する場合はここを変更 */
-function CardContent({ repo }: { repo: Repo }) {
+function CardContent({ repo, labels }: { repo: Repo; labels: typeof LABELS[keyof typeof LABELS] }) {
   return (
     <>
       <h3 className="text-base font-semibold text-neutral-900 dark:text-neutral-100 truncate mb-2">
         {repo.name}
       </h3>
       <p className="text-sm text-neutral-500 dark:text-neutral-400 flex-1 mb-4">
-        {repo.description ?? "説明なし"}
+        {repo.description ?? labels.noDescription}
       </p>
       {repo.language && (
         <div className="flex items-center gap-1.5 mb-4">
@@ -76,7 +82,7 @@ function CardContent({ repo }: { repo: Repo }) {
 }
 
 /** 詳細モーダルの表示内容 — 将来ここを拡張 */
-function DetailContent({ repo }: { repo: Repo }) {
+function DetailContent({ repo, labels }: { repo: Repo; labels: typeof LABELS[keyof typeof LABELS] }) {
   const detail = PROJECT_DETAILS[repo.name] ?? {};
 
   return (
@@ -86,13 +92,13 @@ function DetailContent({ repo }: { repo: Repo }) {
         <h3 className="text-xl font-bold text-neutral-900 dark:text-neutral-100">
           {repo.name}
         </h3>
-        <span className="text-xs text-neutral-400">リポジトリ</span>
+        <span className="text-xs text-neutral-400">{labels.repository}</span>
       </div>
 
       {/* GitHub description */}
       {repo.description && (
         <div className="mb-4">
-          <p className="text-xs font-semibold text-neutral-400 mb-1">タイトル</p>
+          <p className="text-xs font-semibold text-neutral-400 mb-1">{labels.title}</p>
           <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
             {repo.description}
           </p>
@@ -102,7 +108,7 @@ function DetailContent({ repo }: { repo: Repo }) {
       {/* 詳細説明 */}
       {detail.description && (
         <div className="mb-4">
-          <p className="text-xs font-semibold text-neutral-400 mb-1">説明</p>
+          <p className="text-xs font-semibold text-neutral-400 mb-1">{labels.description}</p>
           <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
             {detail.description}
           </p>
@@ -112,7 +118,7 @@ function DetailContent({ repo }: { repo: Repo }) {
       {/* 制作背景 */}
       {detail.background && (
         <div className="mb-4">
-          <p className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-1">制作背景</p>
+          <p className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-1">{labels.background}</p>
           <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">{detail.background}</p>
         </div>
       )}
@@ -120,7 +126,7 @@ function DetailContent({ repo }: { repo: Repo }) {
       {/* 技術的なポイント */}
       {detail.techPoints && detail.techPoints.length > 0 && (
         <div className="mb-4">
-          <p className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-2">技術的なポイント</p>
+          <p className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-2">{labels.techPoints}</p>
           <ul className="flex flex-wrap gap-2">
             {detail.techPoints.map((point) => (
               <li key={point} className="text-xs bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 px-2 py-1 rounded-md">
@@ -134,7 +140,7 @@ function DetailContent({ repo }: { repo: Repo }) {
       {/* 簡単な使い方 */}
       {detail.usage && (
         <div className="mb-4">
-          <p className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-1">使い方</p>
+          <p className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-1">{labels.usage}</p>
           <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">{detail.usage}</p>
         </div>
       )}
@@ -157,6 +163,8 @@ function DetailContent({ repo }: { repo: Repo }) {
 
 export default function ProjectCard({ repo }: { repo: Repo }) {
   const [open, setOpen] = useState(false);
+  const { isEnglish } = usePlayMode();
+  const labels = isEnglish ? LABELS.en : LABELS.ja;
 
   return (
     <>
@@ -165,7 +173,7 @@ export default function ProjectCard({ repo }: { repo: Repo }) {
         onClick={() => setOpen(true)}
         className="flex flex-col text-left w-full bg-white dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800 rounded-xl p-6 hover:shadow-md dark:hover:shadow-neutral-900 transition-shadow cursor-pointer"
       >
-        <CardContent repo={repo} />
+        <CardContent repo={repo} labels={labels} />
       </button>
 
       {/* 詳細モーダル */}
@@ -188,7 +196,7 @@ export default function ProjectCard({ repo }: { repo: Repo }) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            <DetailContent repo={repo} />
+            <DetailContent repo={repo} labels={labels} />
           </div>
         </div>
       )}
