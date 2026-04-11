@@ -19,14 +19,14 @@ export const metadata: Metadata = {
     template: "%s | Rintaro Yoshida",
   },
   description:
-    "福井大学在学中のエンジニア、Rintaro Yoshida のポートフォリオです。Web・モバイルアプリ開発を中心に活動しています。",
+    "エンジニア志望の学生、Rintaro Yoshida のポートフォリオサイトです。Web・モバイルアプリ開発を中心に活動しています。",
   keywords: [
     "Rintaro Yoshida",
     "吉田琳汰朗",
     "よしだりんたろう",
     "ポートフォリオ",
-    "エンジニア",
-    "福井大学",
+    "学生",
+    "エンジニア志望",
     "Web開発",
     "モバイルアプリ",
     "JavaScript",
@@ -42,13 +42,13 @@ export const metadata: Metadata = {
     siteName: "Rintaro Yoshida | Portfolio",
     title: "Rintaro Yoshida | Portfolio",
     description:
-      "福井大学在学中のエンジニア。Web・モバイルアプリ開発を中心に活動しています。",
+      "エンジニア志望の学生。Web・モバイルアプリ開発を中心に活動しています。",
   },
   twitter: {
     card: "summary_large_image",
     title: "Rintaro Yoshida | Portfolio",
     description:
-      "福井大学在学中のエンジニア。Web・モバイルアプリ開発を中心に活動しています。",
+      "エンジニア志望の学生。Web・モバイルアプリ開発を中心に活動しています。",
   },
   robots: {
     index: true,
@@ -75,13 +75,9 @@ const jsonLd = {
   alternateName: ["吉田琳汰朗", "よしだりんたろう"],
   url: BASE_URL,
   sameAs: ["https://github.com/yr04491"],
-  jobTitle: "Student Engineer",
-  affiliation: {
-    "@type": "EducationalOrganization",
-    name: "Fukui University",
-  },
+  jobTitle: "Student",
   description:
-    "福井大学在学中のエンジニア。Web・モバイルアプリ開発を中心に活動しています。",
+    "エンジニア志望の学生。Web・モバイルアプリ開発を中心に活動しています。",
 };
 
 export default function RootLayout({
