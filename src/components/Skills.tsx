@@ -1,13 +1,14 @@
 import { getLanguageStats } from "@/lib/github";
 import * as si from "simple-icons";
 
-const ICON_SLUG_MAP: Record<string, string> = {
+// simple-icons のバージョンでアイコン名が変わることがあるため、候補を複数持たせる
+const ICON_SLUG_MAP: Record<string, string | string[]> = {
   JavaScript: "javascript",
   TypeScript: "typescript",
   Dart: "dart",
   Python: "python",
-  HTML: "html5",
-  CSS: "css3",
+  HTML: ["html5", "html"],
+  CSS: ["css", "css3"],
   Shell: "gnubash",
   Ruby: "ruby",
   Go: "go",
@@ -21,6 +22,7 @@ const ICON_SLUG_MAP: Record<string, string> = {
   Vue: "vuedotjs",
   React: "react",
   Svelte: "svelte",
+  CMake: "cmake",
 };
 
 const CATEGORY_MAP: Record<string, "Frontend" | "Backend" | "Others"> = {
@@ -43,16 +45,21 @@ const CATEGORY_MAP: Record<string, "Frontend" | "Backend" | "Others"> = {
   Dart: "Frontend",
   Swift: "Others",
   Shell: "Others",
+  CMake: "Others",
 };
 
 const CATEGORIES = ["Frontend", "Backend", "Others"] as const;
 
 function getIcon(langName: string): { hex: string; path: string } | null {
-  const slug = ICON_SLUG_MAP[langName];
-  if (!slug) return null;
-  const key = `si${slug.charAt(0).toUpperCase()}${slug.slice(1)}` as keyof typeof si;
-  const icon = si[key] as { hex: string; path: string } | undefined;
-  return icon ?? null;
+  const entry = ICON_SLUG_MAP[langName];
+  if (!entry) return null;
+  const slugs = Array.isArray(entry) ? entry : [entry];
+  for (const slug of slugs) {
+    const key = `si${slug.charAt(0).toUpperCase()}${slug.slice(1)}` as keyof typeof si;
+    const icon = si[key] as { hex: string; path: string } | undefined;
+    if (icon) return icon;
+  }
+  return null;
 }
 
 function IconCard({ name }: { name: string }) {

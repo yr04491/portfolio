@@ -14,11 +14,14 @@ export default function Hero() {
         <p className="text-sm tracking-widest text-neutral-400 uppercase mb-4">
           {t.label}
         </p>
-        <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100 mb-6">
+        <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100 mb-3">
           Rintaro
           <br />
           Yoshida
         </h1>
+        <p className="text-base md:text-lg text-neutral-400 tracking-widest mb-6">
+          {t.nameJa}
+        </p>
         <p className="text-lg md:text-xl text-neutral-500 dark:text-neutral-400 max-w-xl leading-relaxed whitespace-pre-line">
           {t.description}
         </p>

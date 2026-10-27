@@ -15,15 +15,17 @@ const BASE_URL = "https://yr04491.vercel.app";
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "Rintaro Yoshida | Portfolio",
-    template: "%s | Rintaro Yoshida",
+    default: "吉田琳汰朗 | Rintaro Yoshida Portfolio",
+    template: "%s | 吉田琳汰朗",
   },
   description:
-    "エンジニア志望の学生、Rintaro Yoshida のポートフォリオサイトです。Web・モバイルアプリ開発を中心に活動しています。",
+    "福井大学の吉田琳汰朗（Rintaro Yoshida）のポートフォリオサイトです。Web・モバイルアプリ開発を中心に、これまでに制作した作品を紹介しています。",
   keywords: [
     "Rintaro Yoshida",
     "吉田琳汰朗",
     "よしだりんたろう",
+    "福井大学",
+    "Fukui University",
     "ポートフォリオ",
     "学生",
     "エンジニア志望",
@@ -33,22 +35,22 @@ export const metadata: Metadata = {
     "Dart",
     "Flutter",
   ],
-  authors: [{ name: "Rintaro Yoshida", url: BASE_URL }],
+  authors: [{ name: "吉田琳汰朗 (Rintaro Yoshida)", url: BASE_URL }],
   creator: "Rintaro Yoshida",
   openGraph: {
     type: "website",
     locale: "ja_JP",
     url: BASE_URL,
-    siteName: "Rintaro Yoshida | Portfolio",
-    title: "Rintaro Yoshida | Portfolio",
+    siteName: "吉田琳汰朗 | Rintaro Yoshida Portfolio",
+    title: "吉田琳汰朗 | Rintaro Yoshida Portfolio",
     description:
-      "エンジニア志望の学生。Web・モバイルアプリ開発を中心に活動しています。",
+      "福井大学の吉田琳汰朗（Rintaro Yoshida）のポートフォリオ。Web・モバイルアプリ開発を中心に活動しています。",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Rintaro Yoshida | Portfolio",
+    title: "吉田琳汰朗 | Rintaro Yoshida Portfolio",
     description:
-      "エンジニア志望の学生。Web・モバイルアプリ開発を中心に活動しています。",
+      "福井大学の吉田琳汰朗（Rintaro Yoshida）のポートフォリオ。Web・モバイルアプリ開発を中心に活動しています。",
   },
   robots: {
     index: true,
@@ -71,13 +73,17 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
-  name: "Rintaro Yoshida",
-  alternateName: ["吉田琳汰朗", "よしだりんたろう"],
+  name: "吉田琳汰朗",
+  alternateName: ["Rintaro Yoshida", "よしだりんたろう"],
   url: BASE_URL,
   sameAs: ["https://github.com/yr04491"],
   jobTitle: "Student",
-  description:
-    "エンジニア志望の学生。Web・モバイルアプリ開発を中心に活動しています。",
+  affiliation: {
+    "@type": "CollegeOrUniversity",
+    name: "福井大学",
+    alternateName: "University of Fukui",
+  },
+  description: "福井大学の吉田琳汰朗（Rintaro Yoshida）のポートフォリオ。Web・モバイルアプリ開発を中心に活動しています。",
 };
 
 export default function RootLayout({

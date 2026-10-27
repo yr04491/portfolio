@@ -6,8 +6,8 @@ import { PROJECT_DETAILS } from "@/config/projects";
 import { usePlayMode } from "@/context/PlayModeContext";
 
 const LABELS = {
-  ja: { repository: "リポジトリ", title: "タイトル", description: "説明", background: "制作背景", techPoints: "技術的なポイント", usage: "使い方", language: "使用言語", noDescription: "説明なし", updatedAt: "最終更新日" },
-  en: { repository: "Repository", title: "Title", description: "Description", background: "Background", techPoints: "Tech Points", usage: "Usage", language: "Language", noDescription: "No description", updatedAt: "Last Updated" },
+  ja: { repository: "リポジトリ", title: "タイトル", description: "説明", background: "制作背景", techPoints: "技術的なポイント", usage: "使い方", language: "使用言語", noDescription: "説明なし", updatedAt: "最終更新日", highlight: "ここがポイント" },
+  en: { repository: "Repository", title: "Title", description: "Description", background: "Background", techPoints: "Tech Points", usage: "Usage", language: "Language", noDescription: "No description", updatedAt: "Last Updated", highlight: "Highlight" },
 } as const;
 
 const LANGUAGE_COLORS: Record<string, string> = {
@@ -40,12 +40,12 @@ function RepoLinks({ repo, size = "sm" }: { repo: Repo; size?: "sm" | "base" }) 
   const cls = `flex items-center gap-1.5 text-${size} text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors`;
   return (
     <div className="flex items-center gap-3 mt-auto">
-      <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className={cls}>
+      <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className={cls} onClick={(e) => e.stopPropagation()}>
         <GitHubIcon />
         GitHub
       </a>
       {repo.homepage && (
-        <a href={repo.homepage} target="_blank" rel="noopener noreferrer" className={cls}>
+        <a href={repo.homepage} target="_blank" rel="noopener noreferrer" className={cls} onClick={(e) => e.stopPropagation()}>
           <ExternalLinkIcon />
           {(() => {
             const u = new URL(repo.homepage);
@@ -57,16 +57,38 @@ function RepoLinks({ repo, size = "sm" }: { repo: Repo; size?: "sm" | "base" }) 
   );
 }
 
-/** 一覧カードの表示内容 — 将来的に詳細と差別化する場合はここを変更 */
-function CardContent({ repo, labels }: { repo: Repo; labels: typeof LABELS[keyof typeof LABELS] }) {
+/** 一覧カードの表示内容 */
+function CardContent({
+  repo,
+  labels,
+  featured = false,
+}: {
+  repo: Repo;
+  labels: typeof LABELS[keyof typeof LABELS];
+  featured?: boolean;
+}) {
+  const detail = PROJECT_DETAILS[repo.name] ?? {};
+  const title = detail.title ?? repo.name;
+  const summary = detail.summary ?? repo.description ?? detail.description ?? labels.noDescription;
+
   return (
     <>
-      <h3 className="text-base font-semibold text-neutral-900 dark:text-neutral-100 truncate mb-2">
-        {repo.name}
+      <h3
+        className={`${featured ? "text-lg md:text-xl" : "text-base"} font-semibold text-neutral-900 dark:text-neutral-100 mb-2`}
+      >
+        {title}
       </h3>
-      <p className="text-sm text-neutral-500 dark:text-neutral-400 flex-1 mb-4">
-        {repo.description ?? labels.noDescription}
+      <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed flex-1 mb-4">
+        {summary}
       </p>
+      {featured && detail.highlight && (
+        <div className="mb-4 border-l-2 border-neutral-900 dark:border-neutral-100 pl-3">
+          <p className="text-xs font-semibold text-neutral-400 mb-1">{labels.highlight}</p>
+          <p className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
+            {detail.highlight}
+          </p>
+        </div>
+      )}
       {repo.language && (
         <div className="flex items-center gap-1.5 mb-4">
           <span
@@ -90,9 +112,9 @@ function DetailContent({ repo, labels }: { repo: Repo; labels: typeof LABELS[key
       {/* リポジトリ名 + 小ラベル */}
       <div className="flex items-baseline gap-2 mb-4 pr-8">
         <h3 className="text-xl font-bold text-neutral-900 dark:text-neutral-100">
-          {repo.name}
+          {detail.title ?? repo.name}
         </h3>
-        <span className="text-xs text-neutral-400">{labels.repository}</span>
+        <span className="text-xs text-neutral-400">{repo.name}</span>
       </div>
 
       {/* 最終更新日 */}
@@ -172,7 +194,7 @@ function DetailContent({ repo, labels }: { repo: Repo; labels: typeof LABELS[key
   );
 }
 
-export default function ProjectCard({ repo }: { repo: Repo }) {
+export default function ProjectCard({ repo, featured = false }: { repo: Repo; featured?: boolean }) {
   const [open, setOpen] = useState(false);
   const { isEnglish } = usePlayMode();
   const labels = isEnglish ? LABELS.en : LABELS.ja;
@@ -180,12 +202,24 @@ export default function ProjectCard({ repo }: { repo: Repo }) {
   return (
     <>
       {/* 一覧カード */}
-      <button
+      <div
+        role="button"
+        tabIndex={0}
         onClick={() => setOpen(true)}
-        className="flex flex-col text-left w-full bg-white dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800 rounded-xl p-6 hover:shadow-md dark:hover:shadow-neutral-900 transition-shadow cursor-pointer"
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setOpen(true);
+          }
+        }}
+        className={`flex flex-col text-left w-full h-full bg-white dark:bg-neutral-900 border rounded-xl hover:shadow-md dark:hover:shadow-neutral-900 transition-shadow cursor-pointer ${
+          featured
+            ? "border-neutral-200 dark:border-neutral-700 p-6 md:p-8"
+            : "border-neutral-100 dark:border-neutral-800 p-6"
+        }`}
       >
-        <CardContent repo={repo} labels={labels} />
-      </button>
+        <CardContent repo={repo} labels={labels} featured={featured} />
+      </div>
 
       {/* 詳細モーダル */}
       {open && (
@@ -195,7 +229,7 @@ export default function ProjectCard({ repo }: { repo: Repo }) {
         >
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
           <div
-            className="relative z-10 w-full max-w-lg bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-2xl p-8 shadow-2xl"
+            className="relative z-10 w-full max-w-lg max-h-[85vh] overflow-y-auto bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-2xl p-8 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <button

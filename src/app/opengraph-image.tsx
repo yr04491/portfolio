@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Rintaro Yoshida | Portfolio";
+export const alt = "吉田琳汰朗 | Rintaro Yoshida Portfolio";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -51,7 +51,7 @@ export default function OgImage() {
             marginBottom: 48,
           }}
         >
-          Fukui University — Web / Mobile Developer
+          University of Fukui — Web / Mobile Developer
         </div>
         <div
           style={{
